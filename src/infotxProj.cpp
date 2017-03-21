@@ -3,7 +3,7 @@
 // Author      : 
 // Version     :
 // Copyright   : Your copyright notice
-// Description : Hello World in C++, Ansi-style
+// Description : Data Logger C++ program for BBB to send temp and time data to Couchdb Database
 //============================================================================
 #include <iostream>
 #include <unistd.h>
