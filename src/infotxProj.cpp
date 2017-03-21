@@ -15,18 +15,19 @@
 #include <time.h>
 #include <iomanip>
 using namespace std;
-/*#define TEMP_PATH "/sys/bus/iio/devices/iio:device0/in_voltage"
-#define SLOTS "/sys/devices/bone_capemgr.9/slots" //This line can be added in case SLOTS not set up on BBB.
-const int B =4275;
-int readAnalog(int number){
-   stringstream ss;
-   ss << TEMP_PATH << number << "_raw";
-   fstream fs;
-   fs.open(ss.str().c_str(), fstream::in);
-   fs >> number;
-   fs.close();
-return number;
-}*/
+		/* I planned to reuse this code from a previous project but I kept getting that GLIBXXX error.
+		#define TEMP_PATH "/sys/bus/iio/devices/iio:device0/in_voltage"
+		#define SLOTS "/sys/devices/bone_capemgr.9/slots" //This line can be added in case SLOTS not set up on BBB.
+		const int B =4275;
+		int readAnalog(int number){
+		   stringstream ss;
+		   ss << TEMP_PATH << number << "_raw";
+		   fstream fs;
+		   fs.open(ss.str().c_str(), fstream::in);
+		   fs >> number;
+		   fs.close();
+		return number;
+		}*/
 
 using namespace std;
 int main()
@@ -37,7 +38,7 @@ int main()
 
 	}*/
 	int num;
-	int starttime = 0;
+	int starttime = 0;//will increment by 5 on each loop...
 	cout << "Press 1 to start the data logger" ;
 	cin >> num;
 	while(num==1)
@@ -51,21 +52,27 @@ int main()
 		R = 100000.0*R;
 		cout << "Temperature is : " << temperature << "Degrees Celcius" << endl;*/
 
-		// Getting the local time
+// Getting the local time
 		time_t now = time(0);
 		struct tm *timeinfo;
 		time(&now);
 		timeinfo = localtime(&now);
-		cout << "Time is :"<< timeinfo<< endl;
-		//update temp data with random numbers
-	float temperature = 20 + rand()%10;
-	//sending temp data
-	char  data[1000];
+//update temp data with random numbers
+		float temperature = 20 + rand()%10;
+//sending temp data
+		char  data[1000];
 		sprintf(data,"curl -H \'Content-Type: application/json\'\
 				 -X POST  \'http://mary:B00024992@178.62.29.184/db/mary_temp' \
 				-d '{\"tempval\":\"%.2f\",\"timestamp\":\"%d\",\"unitid\":\"maryBB\"}'",temperature,starttime);
 		system(data);
-		//sending tech data
+
+
+	//	I also tried this to get correct time but couldn't get it to work properly
+			/*	sprintf(data,"curl -H \'Content-Type: application/json\'\
+					 -X POST  \'http://mary:B00024992@178.62.29.184/db/mary_temp' \
+					-d '{\"tempval\":\"%.2f\",\"timestamp\":\"Time: %H:%M:%S\",\"unitid\":\"maryBB\"}'",temperature,timeinfo);
+				system(data);*/
+//sending tech data
 		system ("curl -H 'Content-Type: application/json'\
 				 -X POST  'http://mary:B00024992@178.62.29.184/db/mary_temp' \
 				-d '{\"status\":\"ON\",\"unitid\":\"maryBB\"}'");
