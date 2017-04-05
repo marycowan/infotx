@@ -9,11 +9,13 @@
 #include <unistd.h>
 #include <fstream>
 #include <string>
+#include <string.h>
 #include <sstream>
 #include <math.h>
 #include <ctime>
 #include <time.h>
 #include <iomanip>
+#include <stdexcept>
 using namespace std;
 		/* I planned to reuse this code from a previous project but I kept getting that GLIBXXX error.
 		#define TEMP_PATH "/sys/bus/iio/devices/iio:device0/in_voltage"
@@ -43,7 +45,7 @@ int main()
 	cin >> num;
 	while(num==1)
 	{
-		/*cout << "Starting the readTHermistor program" << endl;
+		/*cout << "Starting the readTHermistor program" << endl;//glibxx error when included
 		usleep(1000);
 		int value = readAnalog(0);
 		float R= 4095.0/((float)value)-1.0;
@@ -51,32 +53,31 @@ int main()
 		float temperature =1.0/(log(R/100000.0)/B+1/298.15)-263.15;// convert an val to temp C.
 		R = 100000.0*R;
 		cout << "Temperature is : " << temperature << "Degrees Celcius" << endl;*/
-
-// Getting the local time
-		time_t now = time(0);
-		struct tm *timeinfo;
-		time(&now);
-		timeinfo = localtime(&now);
 //update temp data with random numbers
 		float temperature = 20 + rand()%10;
 //sending temp data
 		char  data[1000];
 		sprintf(data,"curl -H \'Content-Type: application/json\'\
 				 -X POST  \'http://mary:B00024992@178.62.29.184/db/mary_temp' \
-				-d '{\"tempval\":\"%.2f\",\"timestamp\":\"%d\",\"unitid\":\"maryBB\"}'",temperature,starttime);
+			   	-d '{\"tempval\":\"%.2f\",\"timestamp\":\"%d\",\"unitid\":\"maryBBB\"}'",temperature,starttime);
 		system(data);
-
-
-	//	I also tried this to get correct time but couldn't get it to work properly
-			/*	sprintf(data,"curl -H \'Content-Type: application/json\'\
-					 -X POST  \'http://mary:B00024992@178.62.29.184/db/mary_temp' \
-					-d '{\"tempval\":\"%.2f\",\"timestamp\":\"Time: %H:%M:%S\",\"unitid\":\"maryBB\"}'",temperature,timeinfo);
-				system(data);*/
-//sending tech data
+		//	I also tried this to get correct time but couldn't get it to work properly
+			// Getting the local time
+			//time_t now = time(0);
+			//struct tm *timeinfo;
+			//	time(&now);
+			//	timeinfo = localtime(&now);
+			//	string temp =asctime(timeinfo);
+			//	string realtime = temp.substr(0,temp.size()-1);/because newline added by asctime so need to get rid
+			//sprintf(data,"curl -H \'Content-Type: application/json\'\
+			//				 -X POST  \'http://mary:B00024992@178.62.29.184/db/mary_temp' \
+			//	   	-d '{\"tempval\":\"%.2f\",\"timestamp\":\"%s\",\"unitid\":\"maryBBB\"}'",temperature,realtime);
+			//			system(data);
+			//sending tech data
 		system ("curl -H 'Content-Type: application/json'\
 				 -X POST  'http://mary:B00024992@178.62.29.184/db/mary_temp' \
 				-d '{\"status\":\"ON\",\"unitid\":\"maryBB\"}'");
-		starttime += 5;
+		starttime += 5;//sorr, just increment by 5 each loop :(
 		cout << "Sleeping now for 5 mins" << endl;
 		usleep(300000000);
 
