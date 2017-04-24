@@ -71,7 +71,7 @@ EVENT_RESOURCE(res_setpoint,
 /*
  * Use local resource state that is accessed by res_get_handler() and altered by res_event_handler() or PUT or POST.
  */
-static int32_t temp_setpoint = 15;
+static int32_t temp_setpoint = 15;//start at 15 degree setpoint
 //static int32_t event_counter = 0;
 
 static void

@@ -68,13 +68,13 @@
  */
 extern resource_t
   res_hello,
-  res_manuf,
+  res_manuf,//added resource fro manuf name
   res_mirror,
   res_chunks,
   res_separate,
   res_push,
   res_event,
-  res_setpoint,//has event_handler
+  res_setpoint,//has event_handler button press event
   res_adc,//has event_handler2
   res_sub,
   res_b1_sep_b2;
@@ -195,11 +195,11 @@ PROCESS_THREAD(er_example_server, ev, data)
       /* Call the event_handler for this application-specific event. */
       res_setpoint.trigger();
  printf("Desired temp %d", getTemperatureSetpoint());
-switch(getTemperatureSetpoint())
+switch(getTemperatureSetpoint())//switch to set and clear leds depending on setpoint
 {
 case 17:
-	ti_lib_gpio_set_dio(IOID_1);
-	ti_lib_gpio_clear_dio(IOID_2);
+	ti_lib_gpio_set_dio(IOID_1);//turnon
+	ti_lib_gpio_clear_dio(IOID_2);//allotheroff
 	ti_lib_gpio_clear_dio(IOID_3);
 	ti_lib_gpio_clear_dio(IOID_4);
 	ti_lib_gpio_clear_dio(IOID_5);
@@ -231,13 +231,7 @@ default:
 	ti_lib_gpio_clear_dio(IOID_5);
 }
 
-  /*    if( getTemperatureSetpoint()==20)
-	{
-	ti_lib_gpio_set_dio(IOID_4);
-	}
-      else{
-	ti_lib_gpio_clear_dio(IOID_4);
-	}*/
+  
 
       /* Also call the separate response example handler. */
       res_separate.resume();
