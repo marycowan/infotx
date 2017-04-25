@@ -78,7 +78,7 @@ res_get_handler(void *request, void *response, uint8_t *buffer, uint16_t preferr
    */
 
   int temperature = temperature_sensor.value(0);//
-temperature = (((temperature *1.22)-.5)/ 0.01);//1.22mV per step from 12bit adc. 5/4096, .5 is V at 0deg and .01V is Tcomp.
+temperature = (((temperature *1.22)-500)/ 10);//1.22mV per step from 12bit adc. 5/4096, .5 is V at 0deg and .01V is Tcomp.
 
 
   unsigned int accept = -1;
