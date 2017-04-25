@@ -64,13 +64,34 @@ res_get_handler(void *request, void *response, uint8_t *buffer, uint16_t preferr
 #if 0
   const char *len = NULL;
 char message[50];
-  /* Some data that has the length up to REST_MAX_CHUNK_SIZE. For more, see the chunk resource. */
-  int length = 20; /*           |<-------->| */
+/* int temperature = singleSample;//*  *******************************************start addition
+temperature = (((temperature *1.22)-.5)/ 0.01);//1.22mV per step from 12bit adc. 5/4096, .5 is V at 0deg and .01V is Tcomp.
+
+
+  unsigned int accept = -1;    // THIS WAS TO GET TEMP FROM ADC VALUE BUT COULDN'T GET TO COMPILE****************
+  REST.get_header_accept(request, &accept);
+
+  if(accept == -1 || accept == REST.type.TEXT_PLAIN) {// different types of responses depending on what was requested, JSON 
+    REST.set_header_content_type(response, REST.type.TEXT_PLAIN);//or plain text etc.
+    snprintf((char *)buffer, REST_MAX_CHUNK_SIZE, "%d", temperature);
+
+    REST.set_response_payload(response, (uint8_t *)buffer, strlen((char *)buffer));
+  } else if(accept == REST.type.APPLICATION_JSON) {
+    REST.set_header_content_type(response, REST.type.APPLICATION_JSON);
+    snprintf((char *)buffer, REST_MAX_CHUNK_SIZE, "{'temperature':%d}", temperature);
+
+    REST.set_response_payload(response, buffer, strlen((char *)buffer));
+  } else {
+    REST.set_response_status(response, REST.status.NOT_ACCEPTABLE);// not good, wrong types received.
+    const char *msg = "Supporting content-types text/plain and application/json";
+    REST.set_response_payload(response, msg, strlen(msg));
+  }*/  *******************************************************************************************************finish add
+  
 
 sprintf(message, "{\"adc_mv\":%d}", singleSample);
   length = strlen(message);
 
-  /* The query string can be retrieved by rest_get_query() or parsed for its key-value pairs. */
+   The query string can be retrieved by rest_get_query() or parsed for its key-value pairs. 
   if(REST.get_query_variable(request, "len", &len)) {
     length = atoi(len);
     if(length < 0) {
